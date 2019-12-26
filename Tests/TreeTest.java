@@ -33,4 +33,12 @@ public class TreeTest {
         tree.GetChildByName("child2");
         assertSame(tree, tree.children.get("child2").parent);
     }
+
+    @Test
+    public void pathShouldBeCorrect(){
+        String[] pathExpected =  {"test", "child"};
+        tree.children.remove("child");
+        tree.GetChildByName("child");
+        assertArrayEquals(pathExpected, tree.children.get("child").getPath());
+    }
 }

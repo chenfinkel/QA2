@@ -5,7 +5,9 @@ import org.junit.Test;
 import system.FileSystem;
 import system.Leaf;
 import system.OutOfSpaceException;
+import system.Tree;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -25,7 +27,7 @@ public class LeafTest {
 
     @Test(expected = OutOfSpaceException.class)
     public void notEnoughSpaceForLeaf() throws OutOfSpaceException{
-        leaf = new Leaf("leaf",2);
+        leaf = new Leaf("leaf",7);
         assertFalse(((SpaceStub)FileSystem.fileStorage).allocated);
     }
 

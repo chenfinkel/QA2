@@ -9,12 +9,12 @@ public class SpaceStub extends Space {
     public boolean allocated = false;
 
     public SpaceStub(){
-        super(1);
+        super(5);
     }
 
 
     public void Alloc(int size, Leaf file) throws OutOfSpaceException {
-        if (size > 1)
+        if (size > 5)
             throw new OutOfSpaceException();
         else
             allocated = true;
