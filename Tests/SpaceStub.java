@@ -1,8 +1,7 @@
-package Stubs;
-
 import system.Leaf;
 import system.OutOfSpaceException;
 import system.Space;
+import system.Tree;
 
 public class SpaceStub extends Space {
 
@@ -18,5 +17,18 @@ public class SpaceStub extends Space {
             throw new OutOfSpaceException();
         else
             allocated = true;
+    }
+
+    public Leaf[] getAlloc(){
+        Leaf[] blocks = new Leaf[5];
+        try {
+            Leaf leaf1 = new LeafStub("leaf1");
+            blocks[0] = leaf1;
+
+            Leaf leaf2 = new LeafStub("leaf2");
+            blocks[3] = leaf2;
+
+        } catch (OutOfSpaceException e){ e.printStackTrace(); }
+        return blocks;
     }
 }

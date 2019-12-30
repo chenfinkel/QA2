@@ -16,59 +16,79 @@ public class SpaceTest {
     public void setUp() throws OutOfSpaceException{
         FileSystem.fileStorage = new Space(10);
         space = FileSystem.fileStorage;
-        leaf = new Leaf("leaf",0);
+        leaf = new LeafStub("leaf");
         leaf.size = 3;
-        space.Alloc(3, leaf);
     }
 
     @Test
-    public void fileShouldBeAddedToBlocks(){
+    public void fileShouldBeAddedToBlocks() throws OutOfSpaceException{
+        space.Alloc(3, leaf);
         Leaf[] blocks = space.getAlloc();
         assertThat(Arrays.asList(blocks), CoreMatchers.hasItem(leaf));
     }
 
     @Test
-    public void fileShouldBeAllocated(){
+    public void fileShouldBeAllocated() throws OutOfSpaceException{
+        space.Alloc(3, leaf);
         int[] expectedAlloc = {0,1,2};
         assertArrayEquals(leaf.allocations, expectedAlloc);
     }
 
     @Test
-    public void tenShouldBeFree() {
+    public void tenShouldBeFree() throws OutOfSpaceException {
         Tree tree = new Tree("parent");
         leaf.parent = tree;
         tree.children.put("leaf", leaf);
+        space.Alloc(3, leaf);
         space.Dealloc(leaf);
         assertEquals(10, space.countFreeSpace());
     }
 
     @Test
-    public void blocksShouldBeFree() {
+    public void blocksShouldBeFree() throws OutOfSpaceException {
         Tree tree = new Tree("parent");
         leaf.parent = tree;
         tree.children.put("leaf", leaf);
+        space.Alloc(3, leaf);
         space.Dealloc(leaf);
         Leaf[] expectedAlloc = {null,null,null,null,null,null,null,null,null,null};
         assertArrayEquals(expectedAlloc, space.getAlloc());
     }
 
     @Test
-    public void parentShouldHaveDeletedLeaf(){
+    public void parentShouldHaveDeletedLeaf() throws OutOfSpaceException{
         Tree tree = new Tree("parent");
         leaf.parent = tree;
         tree.children.put("leaf", leaf);
+        space.Alloc(3, leaf);
         space.Dealloc(leaf);
         assertTrue(tree.children.isEmpty());
     }
 
     @Test
-    public void sevenShouldBeFree() {
-        assertEquals(7, space.countFreeSpace());
+    public void deallocTwiceShouldDoNotChangeFreeSpace() throws OutOfSpaceException{
+        Tree tree = new Tree("parent");
+        leaf.parent = tree;
+        tree.children.put("leaf", leaf);
+        space.Alloc(3, leaf);
+        space.Dealloc(leaf);
+        int freeSpace = space.countFreeSpace();
+        leaf.parent = tree;
+        tree.children.put("leaf", leaf);
+        space.Dealloc(leaf);
+        int freeSpace2 = space.countFreeSpace();
+        assertEquals(freeSpace, freeSpace2);
+
     }
 
     @Test
-    public void getAlloc() {
-        Leaf[] expectedAlloc = {leaf, leaf, leaf, null, null, null, null, null, null, null};
+    public void freeSpaceShouldBeEmpty() {
+        assertEquals(10, space.countFreeSpace());
+    }
+
+    @Test
+    public void AllocShouldBeEmpty() {
+        Leaf[] expectedAlloc = new Leaf[10];
         assertArrayEquals(expectedAlloc,space.getAlloc());
     }
 }
