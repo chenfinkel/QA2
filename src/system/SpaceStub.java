@@ -1,7 +1,6 @@
-import system.Leaf;
-import system.OutOfSpaceException;
-import system.Space;
-import system.Tree;
+package system;
+
+import system.*;
 
 public class SpaceStub extends Space {
 

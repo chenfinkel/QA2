@@ -1,3 +1,5 @@
+package test;
+
 import java.nio.file.DirectoryNotEmptyException;
 import java.util.Arrays;
 import org.junit.After;
@@ -135,7 +137,7 @@ public class FileSystemTest {
 
     @Test (expected = DirectoryNotEmptyException.class)
     public void rmdirNotEmpty() throws BadFileNameException, DirectoryNotEmptyException {
-        String[] name1 = {"root", "name", "name1"};
+        String[] name1 = {"root", "name1", "name"};
         fs.dir(name);
         fs.dir(name1);
         fs.rmdir(name);

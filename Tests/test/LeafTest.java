@@ -1,9 +1,12 @@
+package test;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import system.FileSystem;
 import system.Leaf;
 import system.OutOfSpaceException;
+import system.SpaceStub;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
