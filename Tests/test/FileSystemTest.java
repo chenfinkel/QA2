@@ -15,13 +15,12 @@ public class FileSystemTest {
     private String[] name = {"root","name1"};
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         fs = new FileSystem(5);
     }
 
     @After
-    public void tearDown() throws Exception {
-        fs.fileStorage = null;
+    public void tearDown()  {
         fs = null;
     }
 
@@ -37,6 +36,11 @@ public class FileSystemTest {
         fs.dir(dir);
     }
 
+//    @Test
+//    public void createDirWithExistName() throws BadFileNameException {
+//        fs.dir(name);
+//        fs.dir(name);
+//    }
 
     @Test
     public void disk() throws BadFileNameException, OutOfSpaceException {/**
@@ -94,9 +98,15 @@ public class FileSystemTest {
     }
 
     @Test (expected = BadFileNameException.class)
-    public void createFileWithSameNameAsFolder() throws BadFileNameException, OutOfSpaceException {
+    public void createFileWithSameNameAsDir() throws BadFileNameException, OutOfSpaceException {
         fs.dir(name);
         fs.file(name, 4);
+    }
+
+    @Test (expected = BadFileNameException.class)
+    public void createDirWithSameNameAsFile() throws BadFileNameException, OutOfSpaceException {
+        fs.file(name, 4);
+        fs.dir(name);
     }
 
     //The lsdir method supposed to return only files, therefore i created files
@@ -129,6 +139,30 @@ public class FileSystemTest {
     }
 
     @Test
+    public void rmFileSize() throws OutOfSpaceException, BadFileNameException {
+        fs.file(name, 2);
+        int size = fs.fileStorage.countFreeSpace();
+        fs.rmfile(name);
+        assertTrue(fs.fileStorage.countFreeSpace() == size+2);
+    }
+
+    @Test
+    public void rmFileTwice() throws OutOfSpaceException, BadFileNameException {
+        fs.file(name, 2);
+        int size = fs.fileStorage.countFreeSpace();
+        fs.rmfile(name);
+        fs.rmfile(name);
+        assertTrue(fs.fileStorage.countFreeSpace() == size+2);
+    }
+
+    @Test
+    public void rmDirTwice() throws BadFileNameException, DirectoryNotEmptyException {
+        fs.dir(name);
+        fs.rmdir(name);
+        fs.rmdir(name);
+    }
+
+    @Test
     public void rmdir() throws BadFileNameException, DirectoryNotEmptyException {
         fs.dir(name);
         fs.rmdir(name);
@@ -140,6 +174,14 @@ public class FileSystemTest {
         String[] name1 = {"root", "name1", "name"};
         fs.dir(name);
         fs.dir(name1);
+        fs.rmdir(name);
+    }
+
+    @Test (expected = DirectoryNotEmptyException.class)
+    public void rmdirNotEmpty2() throws BadFileNameException, DirectoryNotEmptyException, OutOfSpaceException {
+        String[] name2 = {"root", "name1", "name2"};
+        fs.dir(name);
+        fs.file(name2,2);
         fs.rmdir(name);
     }
 
